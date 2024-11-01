@@ -48,4 +48,7 @@ public class UserController {
     public ResponseEntity login(@RequestBody CredentialsLogin credentialsLogin) {
         return ResponseEntity.ok(authService.loginUser(credentialsLogin));
     }
+
+
+    teste
 }
