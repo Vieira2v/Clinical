@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "consultation_schedules")
-public class ConsultationSchedule {
+public class Schedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,10 @@ public class ConsultationSchedule {
     @Column(nullable = false)
     private boolean isAvailable = true;
 
-    public ConsultationSchedule(UserEntity doctor, LocalDateTime dateTime) {
+    private String reason;
+    private String situation;
+
+    public Schedule(UserEntity doctor, LocalDateTime dateTime) {
         this.doctor = doctor;
         this.dateTime = dateTime;
     }

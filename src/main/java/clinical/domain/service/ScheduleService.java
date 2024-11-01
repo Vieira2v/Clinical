@@ -1,11 +1,12 @@
 package clinical.domain.service;
 
 import clinical.controller.mapper.DozerMapper;
+import clinical.controller.request.DoctorAppointments;
+import clinical.controller.request.SchedulesRequest;
 import clinical.controller.response.SchedulesResponse;
 import clinical.resource.repositories.ConsultationScheduleRepository;
 import clinical.resource.repositories.PermissionEntityRepository;
-import clinical.resource.repositories.UserEntityRepository;
-import clinical.resource.repositories.model.ConsultationSchedule;
+import clinical.resource.repositories.model.Schedule;
 import clinical.resource.repositories.model.Permissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,34 +15,33 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ConsultationsService {
+public class ScheduleService {
 
     @Autowired
     PermissionEntityRepository permissionEntityRepository;
 
     @Autowired
     ConsultationScheduleRepository consultationScheduleRepository;
-    @Autowired
-    private UserEntityRepository userEntityRepository;
 
     public List<String> listOfDoctors() {
         Permissions permissions = new Permissions();
-        permissions.setId(2L);
+        permissions.setId(3L);
         return permissionEntityRepository.findUserFullnamesByPermissionId(permissions.getId());
     }
 
     public List<SchedulesResponse> availableSchedulesForDoctor(Long doctorId) {
-        List<ConsultationSchedule> schedules = consultationScheduleRepository.findByDoctorIdAndIsAvailableTrue(doctorId);
+        List<Schedule> schedules = consultationScheduleRepository.findByDoctorIdAndIsAvailableTrue(doctorId);
 
         return DozerMapper.parseListObjects(schedules, SchedulesResponse.class);
     }
 
-    public boolean reserveSchedule(Long scheduleId) {
-        Optional<ConsultationSchedule> consultationSchedule = consultationScheduleRepository.findById(scheduleId);
+    public boolean reserveSchedule(Long scheduleId, SchedulesRequest request) {
+        Optional<Schedule> consultationSchedule = consultationScheduleRepository.findById(scheduleId);
         if (consultationSchedule.isPresent()) {
-            ConsultationSchedule consultationScheduleEntity = consultationSchedule.get();
+            Schedule consultationScheduleEntity = consultationSchedule.get();
             if (consultationScheduleEntity.isAvailable()) {
                 consultationScheduleEntity.setAvailable(false);
+                consultationScheduleEntity.setReason(request.getReason());
                 consultationScheduleRepository.save(consultationScheduleEntity);
                 return true;
             }
@@ -50,9 +50,9 @@ public class ConsultationsService {
     }
 
     public boolean cancelSchedule(Long scheduleId) {
-        Optional<ConsultationSchedule> consultationSchedule = consultationScheduleRepository.findById(scheduleId);
+        Optional<Schedule> consultationSchedule = consultationScheduleRepository.findById(scheduleId);
         if (consultationSchedule.isPresent()) {
-            ConsultationSchedule consultationScheduleEntity = consultationSchedule.get();
+            Schedule consultationScheduleEntity = consultationSchedule.get();
             if (!consultationScheduleEntity.isAvailable()) {
                 consultationScheduleEntity.setAvailable(true);
                 consultationScheduleRepository.save(consultationScheduleEntity);
@@ -61,4 +61,8 @@ public class ConsultationsService {
         }
         return false;
     }
+
+//    public String currentStatusConsultation(DoctorAppointments request, Long doctorId) {
+//
+//    }
 }

@@ -1,9 +1,10 @@
 package clinical.controller;
 
+import clinical.controller.request.SchedulesRequest;
 import clinical.controller.response.SchedulesResponse;
-import clinical.domain.service.ConsultationsService;
+import clinical.domain.service.ScheduleService;
 import clinical.resource.repositories.ConsultationScheduleRepository;
-import clinical.resource.repositories.model.ConsultationSchedule;
+import clinical.resource.repositories.model.Schedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/api/clinical")
-public class ConsultationsController {
+public class SchedulesController {
 
     @Autowired
-    private ConsultationsService consultationsService;
+    private ScheduleService consultationsService;
 
     @Autowired
     private ConsultationScheduleRepository consultationScheduleRepository;
@@ -38,8 +39,8 @@ public class ConsultationsController {
     }
 
     @GetMapping("/schedules/doctor/{doctorId}")
-    public ResponseEntity<List<ConsultationSchedule>> getConsultationsForDoctor(@PathVariable Long doctorId) {
-        List<ConsultationSchedule> consultations = consultationScheduleRepository.findByDoctorIdAndIsAvailableFalse(doctorId);
+    public ResponseEntity<List<Schedule>> getConsultationsForDoctor(@PathVariable Long doctorId) {
+        List<Schedule> consultations = consultationScheduleRepository.findByDoctorIdAndIsAvailableFalse(doctorId);
 
         if (consultations.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -50,9 +51,9 @@ public class ConsultationsController {
 
     @SuppressWarnings("rawtypes")
     @PostMapping("/reserve/{scheduleId}")
-    public ResponseEntity reserveSchedule(@PathVariable("scheduleId") Long scheduleId) {
-        boolean success = consultationsService.reserveSchedule(scheduleId);
-        if (success) {
+    public ResponseEntity reserveSchedule(@PathVariable("scheduleId") Long scheduleId, @RequestBody SchedulesRequest request) {
+        boolean success = consultationsService.reserveSchedule(scheduleId, request);
+        if (success && request != null) {
             return ResponseEntity.ok("Horário reservado com sucesso!");
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Horário não disponível!");

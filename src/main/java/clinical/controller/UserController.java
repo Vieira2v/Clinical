@@ -4,7 +4,7 @@ import clinical.controller.mapper.DozerMapper;
 import clinical.controller.request.UserRequest;
 import clinical.domain.User;
 import clinical.domain.service.AuthenticationService;
-import clinical.domain.service.ConsultationsService;
+import clinical.domain.service.ScheduleService;
 import clinical.domain.service.security.JwtTokenProvider;
 import clinical.domain.service.security.dto.CredentialsLogin;
 import clinical.resource.repositories.UserEntityRepository;
@@ -27,7 +27,7 @@ public class UserController {
     private AuthenticationService authService;
 
     @Autowired
-    private ConsultationsService consultationsService;
+    private ScheduleService consultationsService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -48,7 +48,4 @@ public class UserController {
     public ResponseEntity login(@RequestBody CredentialsLogin credentialsLogin) {
         return ResponseEntity.ok(authService.loginUser(credentialsLogin));
     }
-
-
-    teste
 }
