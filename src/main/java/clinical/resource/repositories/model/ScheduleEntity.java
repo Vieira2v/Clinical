@@ -13,11 +13,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "consultation_schedules")
-public class Schedule {
+public class ScheduleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -34,7 +33,7 @@ public class Schedule {
     private String reason;
     private String situation;
 
-    public Schedule(UserEntity doctor, LocalDateTime dateTime) {
+    public ScheduleEntity(UserEntity doctor, LocalDateTime dateTime) {
         this.doctor = doctor;
         this.dateTime = dateTime;
     }

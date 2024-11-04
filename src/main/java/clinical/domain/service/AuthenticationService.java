@@ -19,7 +19,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +59,7 @@ public class AuthenticationService {
     }
 
     @SuppressWarnings("rawtypes")
-    public ResponseEntity loginUser(@RequestBody CredentialsLogin login) {
+    public ResponseEntity loginUser(CredentialsLogin login) {
         try {
             var username = login.getUsername();
             var password = login.getPassword();

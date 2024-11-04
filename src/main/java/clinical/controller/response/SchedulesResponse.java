@@ -9,5 +9,6 @@ public class SchedulesResponse {
 
     private LocalDateTime dateTime;
     private boolean isAvailable = true;
+    private String situation;
 
 }

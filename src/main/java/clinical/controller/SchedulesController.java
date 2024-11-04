@@ -4,7 +4,7 @@ import clinical.controller.request.SchedulesRequest;
 import clinical.controller.response.SchedulesResponse;
 import clinical.domain.service.ScheduleService;
 import clinical.resource.repositories.ConsultationScheduleRepository;
-import clinical.resource.repositories.model.Schedule;
+import clinical.resource.repositories.model.ScheduleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/api/clinical")
+@RequestMapping("/v1/api/clinical/schedules")
 public class SchedulesController {
 
     @Autowired
@@ -28,7 +28,7 @@ public class SchedulesController {
         return ResponseEntity.ok(consultationsService.listOfDoctors());
     }
 
-    @GetMapping("/schedules/{doctorId}")
+    @GetMapping("/available/{doctorId}")
     public ResponseEntity<Object> getAvailableSchedules(@PathVariable("doctorId") Long doctorId) {
         List<SchedulesResponse> schedules = consultationsService.availableSchedulesForDoctor(doctorId);
         if (schedules.isEmpty()) {
@@ -36,17 +36,6 @@ public class SchedulesController {
         } else {
             return ResponseEntity.ok(schedules);
         }
-    }
-
-    @GetMapping("/schedules/doctor/{doctorId}")
-    public ResponseEntity<List<Schedule>> getConsultationsForDoctor(@PathVariable Long doctorId) {
-        List<Schedule> consultations = consultationScheduleRepository.findByDoctorIdAndIsAvailableFalse(doctorId);
-
-        if (consultations.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.ok(consultations);
     }
 
     @SuppressWarnings("rawtypes")
@@ -69,5 +58,16 @@ public class SchedulesController {
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Nenhum horário agendado com este ID!");
         }
+    }
+
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<List<ScheduleEntity>> getConsultationsForDoctor(@PathVariable Long doctorId) {
+        List<ScheduleEntity> consultations = consultationScheduleRepository.findByDoctorIdAndIsAvailableFalse(doctorId);
+
+        if (consultations.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(consultations);
     }
 }
