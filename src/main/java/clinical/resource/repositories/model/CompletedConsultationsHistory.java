@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "appointment_history")
 @Entity
-public class AppointmentHistory {
+public class CompletedConsultationsHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,16 +26,18 @@ public class AppointmentHistory {
     private UserEntity doctor;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "patient_id", nullable = false)
-    @JsonIgnore
-    private UserEntity patient;
+    @JoinColumn(name = "patient_id")
+    private UserEntity patientId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "date_time")
     private LocalDateTime dateTime;
 
     @Column(nullable = false)
     private String reason;
 
     @Column(nullable = false)
+    private String situation;
+
+    @Column(nullable = false, name = "comment_final")
     private String commentFinal;
 }

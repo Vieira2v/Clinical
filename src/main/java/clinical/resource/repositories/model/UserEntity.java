@@ -27,11 +27,11 @@ public class UserEntity implements UserDetails {
     private String username;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, name = "full_name")
     private String fullName;
     @Column(nullable = false, unique = true)
     private String email;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "phone_number")
     private String phoneNumber;
     @Column(nullable = false)
     private String gender;

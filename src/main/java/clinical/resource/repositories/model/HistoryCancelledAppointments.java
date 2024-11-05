@@ -2,19 +2,20 @@ package clinical.resource.repositories.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter
 @Setter
+@Getter
+@AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "cancelled_appointments")
 @Entity
-    @Table(name = "consultation_schedules")
-public class ScheduleEntity {
-
+public class HistoryCancelledAppointments {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,17 +25,13 @@ public class ScheduleEntity {
     @JsonIgnore
     private UserEntity doctor;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "patient_id")
+    private UserEntity patientId;
+
     @Column(nullable = false, name = "date_time")
     private LocalDateTime dateTime;
 
-    @Column(nullable = false, name = "is_available")
-    private boolean isAvailable = true;
-
-    private String reason;
-    private String situation;
-
-    public ScheduleEntity(UserEntity doctor, LocalDateTime dateTime) {
-        this.doctor = doctor;
-        this.dateTime = dateTime;
-    }
+    @Column(nullable = false, name = "reason_for_cancellation")
+    private String reasonForCancellation;
 }
