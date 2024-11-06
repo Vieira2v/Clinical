@@ -2,7 +2,7 @@ package clinical.controller;
 
 import clinical.controller.mapper.DozerMapper;
 import clinical.controller.request.UserRequest;
-import clinical.domain.User;
+import clinical.domain.UserDomain;
 import clinical.domain.service.AuthenticationService;
 import clinical.domain.service.ScheduleService;
 import clinical.domain.service.security.JwtTokenProvider;
@@ -38,7 +38,7 @@ public class UserController {
     @SuppressWarnings("rawtypes")
     @PostMapping(value = "/register")
     public ResponseEntity registerUser(@RequestBody UserRequest userRequest) {
-        var request = DozerMapper.parseObject(userRequest, User.class);
+        var request = DozerMapper.parseObject(userRequest, UserDomain.class);
         var create = authService.createUser(request);
         return ResponseEntity.ok(create);
     }

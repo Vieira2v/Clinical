@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "appointment_history")
+@Table(name = "cancelled_appointments")
 @Entity
-public class CompletedConsultationsHistory {
+public class CancelledHistoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,12 +32,6 @@ public class CompletedConsultationsHistory {
     @Column(nullable = false, name = "date_time")
     private LocalDateTime dateTime;
 
-    @Column(nullable = false)
-    private String reason;
-
-    @Column(nullable = false)
-    private String situation;
-
-    @Column(nullable = false, name = "comment_final")
+    @Column(nullable = false, name = "reason_for_cancellation")
     private String commentFinal;
 }

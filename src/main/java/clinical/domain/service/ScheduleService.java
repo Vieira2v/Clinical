@@ -3,15 +3,10 @@ package clinical.domain.service;
 import clinical.controller.mapper.DozerMapper;
 import clinical.controller.request.SchedulesRequest;
 import clinical.controller.response.SchedulesResponse;
-import clinical.domain.CompletedConsultationsDomain;
-import clinical.resource.repositories.AppointmentHistoryRepository;
-import clinical.resource.repositories.ConsultationScheduleRepository;
-import clinical.resource.repositories.PermissionEntityRepository;
-import clinical.resource.repositories.UserEntityRepository;
-import clinical.resource.repositories.model.CompletedConsultationsHistory;
-import clinical.resource.repositories.model.ScheduleEntity;
-import clinical.resource.repositories.model.Permissions;
-import clinical.resource.repositories.model.UserEntity;
+import clinical.domain.CompletedHistoryDomain;
+import clinical.domain.CancelledHistoryDomain;
+import clinical.resource.repositories.*;
+import clinical.resource.repositories.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +30,9 @@ public class ScheduleService {
 
     @Autowired
     UserEntityRepository userEntityRepository;
+
+    @Autowired
+    HistoryCancelledRepository historyCancelledRepository;
 
     public List<String> listOfDoctors() {
         Permissions permissions = new Permissions();
@@ -63,21 +61,39 @@ public class ScheduleService {
         return false;
     }
 
-    public boolean cancelSchedule(Long scheduleId) {
+    public ResponseEntity<SchedulesResponse> cancelSchedule(Long scheduleId, CancelledHistoryDomain request) {
         Optional<ScheduleEntity> consultationSchedule = consultationScheduleRepository.findById(scheduleId);
+        SchedulesResponse response = new SchedulesResponse();
+
         if (consultationSchedule.isPresent()) {
             ScheduleEntity consultationScheduleEntity = consultationSchedule.get();
+
             if (!consultationScheduleEntity.isAvailable()) {
                 consultationScheduleEntity.setAvailable(true);
                 consultationScheduleEntity.setSituation("Cancelada");
-                consultationScheduleRepository.save(consultationScheduleEntity);
-                return true;
+
+                UserEntity patient = userEntityRepository.findById(request.getPatientId().getId())
+                        .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+
+                var transfer = DozerMapper.parseObject(consultationScheduleEntity, CancelledHistoryEntity.class);
+                transfer.setPatientId(patient);
+
+                transfer.setCommentFinal(request.getCommentFinal());
+                transfer.setDateTime(LocalDateTime.now());
+
+                historyCancelledRepository.save(transfer);
+                consultationScheduleRepository.delete(consultationScheduleEntity);
+
+                response.setDateTime(transfer.getDateTime());
+                response.setSituation(transfer.getCommentFinal());
+                return ResponseEntity.ok(response);
             }
         }
-        return false;
+        response.setSituation("Não foi possível cancelar a consulta: agendamento inválido ou já concluído");
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
-    public ResponseEntity<SchedulesResponse> completedStatusConsultation(Long scheduleId, CompletedConsultationsDomain request) {
+    public ResponseEntity<SchedulesResponse> completedStatusConsultation(Long scheduleId, CompletedHistoryDomain request) {
         Optional<ScheduleEntity> consultationScheduleOpt = consultationScheduleRepository.findById(scheduleId);
         SchedulesResponse response = new SchedulesResponse();
 
@@ -90,7 +106,7 @@ public class ScheduleService {
                 UserEntity patient = userEntityRepository.findById(request.getPatientId().getId())
                         .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
 
-                var transfer = DozerMapper.parseObject(consultationScheduleEntity, CompletedConsultationsHistory.class);
+                var transfer = DozerMapper.parseObject(consultationScheduleEntity, CompletedHistoryEntity.class);
                 transfer.setPatientId(patient);
 
                 transfer.setCommentFinal(request.getCommentFinal());
@@ -100,15 +116,13 @@ public class ScheduleService {
                 consultationScheduleRepository.delete(consultationScheduleEntity);
 
                 response.setDateTime(transfer.getDateTime());
-                response.setAvailable(true);
                 response.setSituation(transfer.getSituation());
 
                 return ResponseEntity.ok(response);
             }
         }
 
-        response.setAvailable(false);
-        response.setSituation("Horário não disponível!");
+        response.setSituation("Não foi possível concluir a consulta: agendamento inválido ou já concluído");
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 }

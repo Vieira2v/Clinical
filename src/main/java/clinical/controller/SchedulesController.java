@@ -49,17 +49,6 @@ public class SchedulesController {
         }
     }
 
-    @SuppressWarnings("rawtypes")
-    @PostMapping("/cancel/{scheduleId}")
-    public ResponseEntity cancelSchedule(@PathVariable("scheduleId") Long scheduleId) {
-        boolean success = consultationsService.cancelSchedule(scheduleId);
-        if (success) {
-            return ResponseEntity.ok("Horário cancelado com sucesso!");
-        } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Nenhum horário agendado com este ID!");
-        }
-    }
-
     @GetMapping("/doctor/{doctorId}")
     public ResponseEntity<List<ScheduleEntity>> getConsultationsForDoctor(@PathVariable Long doctorId) {
         List<ScheduleEntity> consultations = consultationScheduleRepository.findByDoctorIdAndIsAvailableFalse(doctorId);

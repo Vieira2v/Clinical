@@ -2,10 +2,8 @@ package clinical.domain;
 
 import lombok.Data;
 
-import java.time.LocalDate;
-
 @Data
-public class User {
+public class UserDomain {
     private int id;
     private String fullName;
     private String email;

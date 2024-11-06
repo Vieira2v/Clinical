@@ -3,7 +3,7 @@ package clinical.domain.service;
 import clinical.controller.config.SecurityConfig;
 import clinical.controller.mapper.DozerMapper;
 import clinical.controller.response.UserResponse;
-import clinical.domain.User;
+import clinical.domain.UserDomain;
 import clinical.domain.service.security.JwtTokenProvider;
 import clinical.domain.service.security.dto.CredentialsLogin;
 import clinical.domain.service.security.dto.Token;
@@ -41,7 +41,7 @@ public class AuthenticationService {
     @Autowired
     private SecurityConfig securityConfig;
 
-    public UserResponse createUser(User user) {
+    public UserResponse createUser(UserDomain user) {
         if (user == null) throw  new IllegalArgumentException();
 
         securityConfig.passwordEncoder().encode(user.getPassword());

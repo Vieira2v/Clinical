@@ -23,7 +23,7 @@ public class UserService implements UserDetailsService {
         var user = repository.findByUsername(username);
 
         if (user != null) {
-            return (UserDetails) user;
+            return user;
         }else {
             throw new UsernameNotFoundException("Username "+ username + " not found!");
         }

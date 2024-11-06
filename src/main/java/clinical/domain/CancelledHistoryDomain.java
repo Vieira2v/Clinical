@@ -6,12 +6,10 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class Schedule {
-
+public class CancelledHistoryDomain {
     private Long id;
     private UserEntity doctor;
+    private UserEntity patientId;
     private LocalDateTime dateTime;
-    private boolean isAvailable = true;
-    private String reason;
-    private String situation;
+    private String commentFinal;
 }
