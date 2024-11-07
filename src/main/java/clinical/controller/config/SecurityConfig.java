@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .requestMatchers("/v1/api/clinical/register", "/v1/api/clinical/login","/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/v1/api/clinical/schedules/doctors", "/v1/api/clinical/schedules/doctor/**","/v1/api/clinical/schedules/available/**","/v1/api/clinical/schedules/reserve/**").authenticated()
                 .requestMatchers("/v1/api/clinical/doctor/**").hasAuthority("DOCTOR")
-                .requestMatchers("/clinical/publi", "/clinical/edit", "clinical/delete/**").hasAuthority("ADMIN"));
+                .requestMatchers("/v1/api/clinical/admin/**", "/v1/api/clinical/admin/cancelled/appointments").hasAuthority("ADMIN"));
 
         JwtConfigurer jwtConfigurer = new JwtConfigurer(jwtTokenProvider);
         jwtConfigurer.configure(http);

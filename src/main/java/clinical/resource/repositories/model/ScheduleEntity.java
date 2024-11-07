@@ -32,9 +32,4 @@ public class ScheduleEntity {
 
     private String reason;
     private String situation;
-
-    public ScheduleEntity(UserEntity doctor, LocalDateTime dateTime) {
-        this.doctor = doctor;
-        this.dateTime = dateTime;
-    }
 }

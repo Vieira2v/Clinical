@@ -21,7 +21,7 @@ public class DoctorController {
 
 
     @SuppressWarnings("rawtypes")
-    @PostMapping(value = "/check/schedules/{scheduleId}")
+    @PutMapping(value = "/check/schedules/{scheduleId}")
     public ResponseEntity checkSchedules(@PathVariable("scheduleId") Long scheduleId, @RequestBody DoctorAppointments comentRequest) {
         var request = DozerMapper.parseObject(comentRequest, CompletedHistoryDomain.class);
         var edit = scheduleService.completedStatusConsultation(scheduleId, request);
@@ -29,7 +29,7 @@ public class DoctorController {
     }
 
     @SuppressWarnings("rawtypes")
-    @PostMapping("/cancel/{scheduleId}")
+    @PutMapping("/cancel/{scheduleId}")
     public ResponseEntity cancelSchedule(@PathVariable("scheduleId") Long scheduleId, @RequestBody DoctorAppointments request) {
         var reason = DozerMapper.parseObject(request, CancelledHistoryDomain.class);
         var cancelled = consultationsService.cancelSchedule(scheduleId, reason);

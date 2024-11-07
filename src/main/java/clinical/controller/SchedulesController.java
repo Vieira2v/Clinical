@@ -39,7 +39,7 @@ public class SchedulesController {
     }
 
     @SuppressWarnings("rawtypes")
-    @PostMapping("/reserve/{scheduleId}")
+    @PutMapping("/reserve/{scheduleId}")
     public ResponseEntity reserveSchedule(@PathVariable("scheduleId") Long scheduleId, @RequestBody SchedulesRequest request) {
         boolean success = consultationsService.reserveSchedule(scheduleId, request);
         if (success && request != null) {
