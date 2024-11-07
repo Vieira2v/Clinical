@@ -4,13 +4,9 @@ import clinical.controller.mapper.DozerMapper;
 import clinical.controller.request.UserRequest;
 import clinical.domain.UserDomain;
 import clinical.domain.service.AuthenticationService;
-import clinical.domain.service.ScheduleService;
-import clinical.domain.service.security.JwtTokenProvider;
 import clinical.domain.service.security.dto.CredentialsLogin;
-import clinical.resource.repositories.UserEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,19 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-    private UserEntityRepository userEntityRepository;
-
-    @Autowired
     private AuthenticationService authService;
-
-    @Autowired
-    private ScheduleService consultationsService;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
 
     @SuppressWarnings("rawtypes")
     @PostMapping(value = "/register")

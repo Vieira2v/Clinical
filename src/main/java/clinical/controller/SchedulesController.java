@@ -1,6 +1,6 @@
 package clinical.controller;
 
-import clinical.controller.request.SchedulesRequest;
+import clinical.controller.request.ReserveSchedulesRequest;
 import clinical.controller.response.SchedulesResponse;
 import clinical.domain.service.ScheduleService;
 import clinical.resource.repositories.ConsultationScheduleRepository;
@@ -40,7 +40,7 @@ public class SchedulesController {
 
     @SuppressWarnings("rawtypes")
     @PutMapping("/reserve/{scheduleId}")
-    public ResponseEntity reserveSchedule(@PathVariable("scheduleId") Long scheduleId, @RequestBody SchedulesRequest request) {
+    public ResponseEntity reserveSchedule(@PathVariable("scheduleId") Long scheduleId, @RequestBody ReserveSchedulesRequest request) {
         boolean success = consultationsService.reserveSchedule(scheduleId, request);
         if (success && request != null) {
             return ResponseEntity.ok("Horário reservado com sucesso!");

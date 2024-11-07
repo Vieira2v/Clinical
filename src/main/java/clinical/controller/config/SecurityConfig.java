@@ -33,7 +33,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/v1/api/clinical/register", "/v1/api/clinical/login","/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/v1/api/clinical/schedules/doctors", "/v1/api/clinical/schedules/doctor/**","/v1/api/clinical/schedules/available/**","/v1/api/clinical/schedules/reserve/**").authenticated()
-                .requestMatchers("/v1/api/clinical/doctor/**").hasAuthority("DOCTOR")
+                .requestMatchers("/v1/api/clinical/doctor/**", "/v1/api/clinical/doctor/create/appointment").hasAuthority("DOCTOR")
                 .requestMatchers("/v1/api/clinical/admin/**", "/v1/api/clinical/admin/cancelled/appointments").hasAuthority("ADMIN"));
 
         JwtConfigurer jwtConfigurer = new JwtConfigurer(jwtTokenProvider);

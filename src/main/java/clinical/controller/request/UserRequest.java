@@ -2,7 +2,6 @@ package clinical.controller.request;
 
 import lombok.*;
 
-import java.time.LocalDate;
 
 @Data
 public class UserRequest {
